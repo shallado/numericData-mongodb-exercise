@@ -17,3 +17,20 @@ db.persons.insertOne({ age: NumberInt(29) });
 
 // check the size compare the size to the size of the previous document entry
 db.persons.stats();
+
+// ------------- Working with int64 ---------------------
+// insert data 
+// what do you notice explain?
+db.companies.insertOne({ valuation: NumberInt('5000000000') });
+
+// insert data
+db.companies.insertOne({ valuation: NumberInt('2147483648') });
+// insert data
+db.companies.insertOne({ valuation: NumberLong('2147483648') });
+
+// what do you notice between the 2 data values that were inserted above?
+
+// so this is the maximum number you can store for a NumberLong
+// between the document inserts which one will error out and why
+db.companies.insertOne({ valuation: NumberLong(9223372036854775807) });
+db.companies.insertOne({ valuation: NumberLong('9223372036854775807') });

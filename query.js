@@ -34,3 +34,43 @@ db.companies.insertOne({ valuation: NumberLong('2147483648') });
 // between the document inserts which one will error out and why
 db.companies.insertOne({ valuation: NumberLong(9223372036854775807) });
 db.companies.insertOne({ valuation: NumberLong('9223372036854775807') });
+
+// ------------- Doing Maths with Floats int32s & int64s ---------------------
+// run the two queries below will you get an error?
+db.accounts.insertOne({
+  name: 'Max',
+  amount: '10'
+});
+db.accounts.updateOne({}, {
+  $inc: {
+    amount: 10
+  }
+});
+
+db.accounts.deleteMany({});
+
+// what the is the difference between the two inserts below?
+// the difference is that one is a number 10 is still the default double 64bit number being passed into the NumberInt method
+// while the other one is a string and we have mongodb figure how to set the number to the proper number datatype which in our case is int32
+db.accounts.insertOne({
+  name: 'Max',
+  amount: NumberInt(10)
+});
+db.accounts.insertOne({
+  name: 'Max',
+  amount: NumberInt('10')
+});
+
+// what is the difference of running these to separate updates to a document?
+// Essentially both are going to increment the amount by 10 successfully but the first update will convert the number from int32 back to double 64bit after is been updated
+// the second update is the better approach because it increments the amount by 10 but it maintains the int32 datatype value
+db.accounts.updateOne({}, {
+  $inc: {
+    amount: 10
+  }
+});
+db.accounts.updateOne({}, {
+  $inc: {
+    amount: NumberInt('10')
+  }
+});
